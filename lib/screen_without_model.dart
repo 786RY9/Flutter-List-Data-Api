@@ -36,20 +36,43 @@ class _ScreenWithoutModelState extends State<ScreenWithoutModel> {
 
   @override
   Widget build(BuildContext context) {
-    return isReady == true
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-          itemCount: postModelList.length,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: EdgeInsets.all(12),
-              child: ListTile(
-                leading: Text(postModelList[index]['id'].toString()),
-                title: Text(postModelList[index]['title'].toString()),
-                subtitle: Text(postModelList[index]['body'].toString()),
-              ),
-            );
-          },
-        );
+    return FutureBuilder(
+      future: ApiServices().getPostWithoutModel(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return Card(
+                margin: EdgeInsets.all(12),
+                child: ListTile(
+                  leading: Text(postModelList[index]['id'].toString()),
+                  title: Text(postModelList[index]['title'].toString()),
+                  subtitle: Text(postModelList[index]['body'].toString()),
+                ),
+              );
+            },
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+
+    // isReady == true
+    //     ? Center(child: CircularProgressIndicator())
+    //     : ListView.builder(
+    //       itemCount: postModelList.length,
+    //       itemBuilder: (context, index) {
+    //         return Card(
+    //           margin: EdgeInsets.all(12),
+    //           child: ListTile(
+    //             leading: Text(postModelList[index]['id'].toString()),
+    //             title: Text(postModelList[index]['title'].toString()),
+    //             subtitle: Text(postModelList[index]['body'].toString()),
+    //           ),
+    //         );
+    //       },
+    //     );
   }
 }
